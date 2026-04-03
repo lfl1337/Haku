@@ -19,7 +19,6 @@ export function useSearch() {
       return data.results;
     } catch (err) {
       setError(err.message);
-      throw err;
     } finally {
       setLoading(false);
     }

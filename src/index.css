@@ -176,6 +176,17 @@ input {
   color: var(--text-secondary);
 }
 
+.folder-picker__input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
 /* Preview */
 .preview {
   display: flex;

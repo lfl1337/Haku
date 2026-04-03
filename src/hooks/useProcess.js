@@ -26,7 +26,6 @@ export function useProcess() {
       return data;
     } catch (err) {
       setError(err.message);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -52,7 +51,6 @@ export function useProcess() {
       return data;
     } catch (err) {
       setError(err.message);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -93,7 +91,6 @@ export function useProcess() {
       }
     } catch (err) {
       setError(err.message);
-      throw err;
     } finally {
       setLoading(false);
     }

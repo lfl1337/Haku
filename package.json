@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -n backend,frontend -c blue,green \"python -u backend/main.py\" \"vite\"",
+    "dev:frontend": "vite",
+    "dev:backend": "python -u backend/main.py",
     "build": "vite build",
     "preview": "vite preview",
     "tauri": "tauri",
@@ -12,15 +14,16 @@
     "tauri:build": "tauri build"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "^2",
-    "@tauri-apps/plugin-fs": "^2"
+    "@tauri-apps/plugin-fs": "^2",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "vite": "^5",
+    "@tauri-apps/cli": "^2",
     "@vitejs/plugin-react": "^4",
-    "@tauri-apps/cli": "^2"
+    "concurrently": "^9.2.1",
+    "vite": "^5"
   }
 }
