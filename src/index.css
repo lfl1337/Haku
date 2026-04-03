@@ -379,3 +379,22 @@ input {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+
+/* BatchMode */
+.batch-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.batch-mode__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.batch-mode__folders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
