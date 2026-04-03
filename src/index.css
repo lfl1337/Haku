@@ -232,3 +232,87 @@ input {
   font-size: 1.5rem;
   color: var(--text-muted);
 }
+
+/* ProgressBar */
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-bar__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+
+.progress-bar__label {
+  color: var(--text-secondary);
+}
+
+.progress-bar__count {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.progress-bar__track {
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease-out;
+}
+
+/* ImageGrid */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.image-grid__item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  background: var(--bg-elevated);
+  padding: 0;
+  transition: border-color 0.15s ease;
+}
+
+.image-grid__item:hover {
+  border-color: var(--border-active);
+}
+
+.image-grid__item--selected {
+  border-color: var(--accent);
+}
+
+.image-grid__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-grid__check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
