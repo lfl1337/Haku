@@ -1,0 +1,49 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install frontend deps
+        run: npm ci
+
+      - name: Install Python deps
+        run: pip install -r backend/requirements.txt
+
+      - name: Download texconv
+        run: |
+          curl -L -o texconv.zip https://github.com/microsoft/DirectXTex/releases/latest/download/texconv.zip
+          Expand-Archive texconv.zip -DestinationPath backend/tools/
+        shell: pwsh
+
+      - name: Build Tauri
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Haku ${{ github.ref_name }}'
+          releaseBody: 'Haku Release ${{ github.ref_name }}'
+          releaseDraft: false
+          prerelease: false
