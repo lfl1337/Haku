@@ -1,0 +1,45 @@
+{
+  "productName": "Haku",
+  "version": "1.0.0",
+  "identifier": "com.lfl1337.haku",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Haku 白",
+        "width": 960,
+        "height": 640,
+        "resizable": true,
+        "decorations": true,
+        "center": true
+      }
+    ]
+  },
+  "plugins": {
+    "dialog": { "all": true },
+    "fs": {
+      "scope": ["**"]
+    },
+    "shell": {
+      "scope": [
+        {
+          "name": "python-backend",
+          "cmd": "python",
+          "args": ["-u", "backend/main.py"]
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": ["icons/icon.png", "icons/icon.ico"],
+    "resources": ["../backend/**/*"]
+  }
+}
