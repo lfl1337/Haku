@@ -16,7 +16,7 @@ def ensure_pip_deps():
     """Install missing Python dependencies from requirements.txt."""
     # Quick check: try importing the heaviest/most-likely-missing packages
     missing = False
-    for module in ["fastapi", "rembg", "PIL", "duckduckgo_search", "httpx"]:
+    for module in ["fastapi", "rembg", "PIL", "ddgs", "httpx"]:
         try:
             __import__(module)
         except ImportError:

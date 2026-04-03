@@ -3,6 +3,6 @@ uvicorn==0.34.*
 rembg==2.0.*
 onnxruntime==1.19.*
 Pillow==11.*
-duckduckgo_search==7.*
+ddgs>=6
 python-multipart==0.0.*
 httpx==0.28.*
