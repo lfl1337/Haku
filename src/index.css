@@ -69,3 +69,68 @@ input {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-active);
 }
+
+/* Layout */
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.layout__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  -webkit-app-region: drag;
+}
+
+.layout__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  -webkit-app-region: drag;
+}
+
+.layout__kanji {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.layout__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ModeSwitch */
+.mode-switch {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-primary);
+  border-radius: var(--radius);
+  padding: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.mode-switch__btn {
+  padding: 6px 16px;
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  transition: all 0.15s ease;
+}
+
+.mode-switch__btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.mode-switch__btn--active {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
