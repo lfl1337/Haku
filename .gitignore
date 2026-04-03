@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build output
+dist/
+target/
+
+# Tauri
+src-tauri/target/
+
+# Backend tools (downloaded separately)
+backend/tools/texconv.exe
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temp files
+_temp_*
+
+# Environment
+.env
