@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 let tauriDialog = null;
 
-// Detect Tauri environment and lazy-load dialog
 const isTauri = typeof window !== "undefined" && window.__TAURI_INTERNALS__;
 if (isTauri) {
   import("@tauri-apps/plugin-dialog").then((mod) => {
@@ -11,7 +10,6 @@ if (isTauri) {
 }
 
 export default function FolderPicker({ label, value, onChange }) {
-  const [editing, setEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
 
   useEffect(() => {
@@ -24,45 +22,40 @@ export default function FolderPicker({ label, value, onChange }) {
       if (selected) {
         onChange(selected);
       }
-    } else {
-      setEditing(true);
     }
   };
 
-  const handleInputConfirm = () => {
-    setEditing(false);
-    if (inputValue.trim()) {
-      onChange(inputValue.trim());
-    }
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    onChange(e.target.value);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleInputConfirm();
-    if (e.key === "Escape") setEditing(false);
-  };
-
-  return (
-    <div className="folder-picker">
-      <span className="folder-picker__label">{label}</span>
-      {editing ? (
-        <input
-          className="folder-picker__input"
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onBlur={handleInputConfirm}
-          onKeyDown={handleKeyDown}
-          placeholder="z.B. F:\Output"
-          autoFocus
-        />
-      ) : (
+  // In Tauri: native folder dialog button
+  if (isTauri) {
+    return (
+      <div className="folder-picker">
+        <span className="folder-picker__label">{label}</span>
         <button className="folder-picker__btn" onClick={handlePick}>
           <span className="folder-picker__icon">📂</span>
           <span className="folder-picker__path">
             {value || "Ordner wählen..."}
           </span>
         </button>
-      )}
+      </div>
+    );
+  }
+
+  // In Browser: text input for path
+  return (
+    <div className="folder-picker">
+      <span className="folder-picker__label">{label}</span>
+      <input
+        className="folder-picker__input"
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder="Pfad eingeben, z.B. F:\Output"
+      />
     </div>
   );
 }

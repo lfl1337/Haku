@@ -457,3 +457,8 @@ input {
   font-size: 0.8125rem;
   color: var(--text-secondary);
 }
+
+.search-mode__hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
