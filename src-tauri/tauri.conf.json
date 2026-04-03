@@ -5,7 +5,7 @@
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "npm run dev:frontend",
     "beforeBuildCommand": "npm run build"
   },
   "app": {
@@ -21,21 +21,7 @@
       }
     ]
   },
-  "plugins": {
-    "dialog": { "all": true },
-    "fs": {
-      "scope": ["**"]
-    },
-    "shell": {
-      "scope": [
-        {
-          "name": "python-backend",
-          "cmd": "python",
-          "args": ["-u", "backend/main.py"]
-        }
-      ]
-    }
-  },
+  "plugins": {},
   "bundle": {
     "active": true,
     "targets": ["nsis"],
