@@ -34,7 +34,7 @@ async def process_single(file: UploadFile = File(...), output_dir: str = Form(..
 
     # Temp PNG → texconv → DDS
     stem = os.path.splitext(file.filename)[0]
-    temp_png = os.path.join(output_dir, f"_temp_{stem}.png")
+    temp_png = os.path.join(output_dir, f"{stem}.png")
     padded.save(temp_png, "PNG")
     convert_to_dds(temp_png, output_dir)
     os.remove(temp_png)
@@ -71,7 +71,7 @@ async def process_batch(body: BatchRequest):
                 padded = resize_with_padding(no_bg)
 
                 stem = os.path.splitext(fname)[0]
-                temp_png = os.path.join(output_dir, f"_temp_{stem}.png")
+                temp_png = os.path.join(output_dir, f"{stem}.png")
                 padded.save(temp_png, "PNG")
                 convert_to_dds(temp_png, output_dir)
                 os.remove(temp_png)
@@ -120,7 +120,7 @@ async def process_from_url(body: FromUrlRequest):
     padded.save(buf2, "PNG")
     processed_b64 = base64.b64encode(buf2.getvalue()).decode()
 
-    temp_png = os.path.join(body.output_dir, f"_temp_{body.filename}.png")
+    temp_png = os.path.join(body.output_dir, f"{body.filename}.png")
     padded.save(temp_png, "PNG")
     convert_to_dds(temp_png, body.output_dir)
     os.remove(temp_png)
