@@ -316,3 +316,66 @@ input {
   font-size: 0.75rem;
   font-weight: 700;
 }
+
+/* Shared button styles */
+.btn {
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn--primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error-msg {
+  color: var(--error);
+  font-size: 0.8125rem;
+  padding: 8px 12px;
+  background: rgba(248, 113, 113, 0.08);
+  border-radius: var(--radius);
+}
+
+.success-msg {
+  color: var(--success);
+  font-size: 0.8125rem;
+  padding: 8px 12px;
+  background: rgba(74, 222, 128, 0.08);
+  border-radius: var(--radius);
+}
+
+.success-msg code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+/* SingleMode */
+.single-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.single-mode__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.single-mode__file-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
