@@ -33,8 +33,10 @@ jobs:
 
       - name: Download texconv
         run: |
-          curl -L -o texconv.zip https://github.com/microsoft/DirectXTex/releases/latest/download/texconv.zip
-          Expand-Archive texconv.zip -DestinationPath backend/tools/
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/DirectXTex/releases/latest"
+          $asset = $release.assets | Where-Object { $_.name -eq "Texconv.exe" }
+          New-Item -ItemType Directory -Force -Path backend/tools | Out-Null
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile backend/tools/texconv.exe
         shell: pwsh
 
       - name: Build Tauri
