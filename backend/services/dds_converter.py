@@ -1,7 +1,20 @@
 import subprocess
+import sys
 import os
 
-TEXCONV_PATH = os.path.join(os.path.dirname(__file__), "..", "tools", "texconv.exe")
+
+def _get_texconv_path():
+    """Find texconv.exe — handles both dev and PyInstaller frozen modes."""
+    if getattr(sys, 'frozen', False):
+        # Frozen onefile: texconv is extracted to the temp _MEIPASS dir
+        base = sys._MEIPASS
+    else:
+        # Dev: texconv is in backend/tools/
+        base = os.path.join(os.path.dirname(__file__), "..", "tools")
+    return os.path.join(base, "texconv.exe")
+
+
+TEXCONV_PATH = _get_texconv_path()
 
 
 def convert_to_dds(input_png: str, output_dir: str) -> str:

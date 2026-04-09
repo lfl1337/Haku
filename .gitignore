@@ -28,3 +28,11 @@ _temp_*
 
 # Environment
 .env
+
+# PyInstaller build artifacts
+backend/build/
+backend/dist/
+backend/*.spec
+
+# Compiled Tauri sidecar binaries
+src-tauri/binaries/

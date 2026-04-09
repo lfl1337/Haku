@@ -1,7 +1,7 @@
 {
   "name": "haku",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "concurrently -n backend,frontend -c blue,green \"python -u backend/main.py\" \"vite\"",
@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "release": "python backend/build_backend.py && tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

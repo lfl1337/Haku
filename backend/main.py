@@ -1,5 +1,12 @@
-import bootstrap
-bootstrap.run()
+import sys
+import os
+
+# When frozen (PyInstaller), skip pip bootstrap — deps are bundled
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
+else:
+    import bootstrap
+    bootstrap.run()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,7 +43,6 @@ def kill_old_backend(port=23431):
         sock.bind(("127.0.0.1", port))
         sock.close()
     except OSError:
-        # Port in use — kill old process
         import subprocess
         result = subprocess.run(
             ["netstat", "-ano"],
@@ -54,5 +60,7 @@ def kill_old_backend(port=23431):
 
 
 if __name__ == "__main__":
+    print("[haku-backend] Starting on 127.0.0.1:23431", flush=True)
+    print(f"[haku-backend] Frozen: {getattr(sys, 'frozen', False)}", flush=True)
     kill_old_backend()
     uvicorn.run(app, host="127.0.0.1", port=23431)
