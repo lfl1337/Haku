@@ -35,7 +35,7 @@ async def health():
     return {"status": "ok"}
 
 
-def kill_old_backend(port=23431):
+def kill_old_backend(port=24100):
     """Kill any existing process on our port before starting."""
     import socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -60,7 +60,7 @@ def kill_old_backend(port=23431):
 
 
 if __name__ == "__main__":
-    print("[haku-backend] Starting on 127.0.0.1:23431", flush=True)
+    print("[haku-backend] Starting on 127.0.0.1:24100", flush=True)
     print(f"[haku-backend] Frozen: {getattr(sys, 'frozen', False)}", flush=True)
     kill_old_backend()
-    uvicorn.run(app, host="127.0.0.1", port=23431)
+    uvicorn.run(app, host="127.0.0.1", port=24100)
