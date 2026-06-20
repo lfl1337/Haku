@@ -6,8 +6,8 @@ import os
 def _get_texconv_path():
     """Find texconv.exe — handles both dev and PyInstaller frozen modes."""
     if getattr(sys, 'frozen', False):
-        # Frozen onefile: texconv is extracted to the temp _MEIPASS dir
-        base = sys._MEIPASS
+        # Frozen: backend.spec bundles texconv under the 'tools' subdir of _MEIPASS
+        base = os.path.join(sys._MEIPASS, "tools")
     else:
         # Dev: texconv is in backend/tools/
         base = os.path.join(os.path.dirname(__file__), "..", "tools")
