@@ -32,7 +32,9 @@ _temp_*
 # PyInstaller build artifacts
 backend/build/
 backend/dist/
-backend/*.spec
+# Note: backend.spec IS tracked (the release build + CI depend on it).
+# Only the dead F:\-path spec stays ignored.
+backend/haku-backend.spec
 
 # Compiled Tauri sidecar binaries
 src-tauri/binaries/
