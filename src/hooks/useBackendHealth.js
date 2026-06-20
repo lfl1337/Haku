@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import { API_BASE as API } from '../config';
 
-const API = 'http://127.0.0.1:23431';
 const MAX_RETRIES = 30;
 const RETRY_INTERVAL = 1000;
 

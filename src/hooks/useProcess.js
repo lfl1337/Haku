@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-const API = "http://127.0.0.1:23431";
+import { API_BASE as API } from "../config";
 
 export function useProcess() {
   const [loading, setLoading] = useState(false);
