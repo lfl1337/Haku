@@ -28,6 +28,12 @@ jobs:
       - name: Install frontend deps
         run: npm ci
 
+      - name: Install backend test deps
+        run: pip install -r backend/requirements-dev.txt
+
+      - name: Backend smoke tests
+        run: python -m pytest backend/tests -q
+
       - name: Build backend sidecar
         run: python backend/build_backend.py
 

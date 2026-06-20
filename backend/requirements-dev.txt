@@ -1,0 +1,4 @@
+# Test/dev-only dependencies — NOT bundled into the PyInstaller sidecar.
+# Install with: pip install -r requirements-dev.txt
+-r requirements.txt
+pytest==9.1.0

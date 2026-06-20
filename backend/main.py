@@ -1,10 +1,11 @@
 import sys
 import os
 
-# When frozen (PyInstaller), skip pip bootstrap — deps are bundled
+# When frozen (PyInstaller), skip pip bootstrap — deps are bundled.
+# HAKU_SKIP_BOOTSTRAP lets tests import the app without triggering pip/network.
 if getattr(sys, 'frozen', False):
     os.chdir(sys._MEIPASS)
-else:
+elif not os.environ.get("HAKU_SKIP_BOOTSTRAP"):
     import bootstrap
     bootstrap.run()
 
