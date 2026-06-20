@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from services.background_remover import remove_background
-from services.image_processor import resize_with_padding
+from services.image_processor import resize_stretch
 from services.dds_converter import convert_to_dds
 from models.schemas import BatchRequest, FromUrlRequest
 from PIL import Image
@@ -25,7 +25,7 @@ async def process_single(file: UploadFile = File(...), output_dir: str = Form(..
 
     # Pipeline: BG Remove → Resize → DDS
     no_bg = remove_background(img_bytes)
-    padded = resize_with_padding(no_bg)
+    padded = resize_stretch(no_bg)
 
     # Processed preview
     buf2 = io.BytesIO()
@@ -68,7 +68,7 @@ async def process_batch(body: BatchRequest):
                 with open(path, "rb") as f:
                     img_bytes = f.read()
                 no_bg = remove_background(img_bytes)
-                padded = resize_with_padding(no_bg)
+                padded = resize_stretch(no_bg)
 
                 stem = os.path.splitext(fname)[0]
                 temp_png = os.path.join(output_dir, f"{stem}.png")
@@ -114,7 +114,7 @@ async def process_from_url(body: FromUrlRequest):
     original_b64 = base64.b64encode(buf.getvalue()).decode()
 
     no_bg = remove_background(img_bytes)
-    padded = resize_with_padding(no_bg)
+    padded = resize_stretch(no_bg)
 
     buf2 = io.BytesIO()
     padded.save(buf2, "PNG")
