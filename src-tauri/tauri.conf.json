@@ -19,7 +19,10 @@
         "decorations": true,
         "center": true
       }
-    ]
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' http://127.0.0.1:24100 http://localhost:5173 ws://localhost:5173; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    }
   },
   "plugins": {
     "shell": {
