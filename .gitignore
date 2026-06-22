@@ -26,6 +26,9 @@ Thumbs.db
 # Temp files
 _temp_*
 
+# AI task prompts (local scratch with machine-local paths, not part of the project)
+Prompts/
+
 # Environment
 .env
 

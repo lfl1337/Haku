@@ -13,7 +13,7 @@
 ## File Structure
 
 ```
-F:\Projekte\Haku\
+<repo-root>/
 ├── src-tauri/
 │   ├── src/main.rs                   # Tauri entry, sidecar launch
 │   ├── icons/icon.png                # App icon (placeholder)
@@ -80,7 +80,7 @@ F:\Projekte\Haku\
 
 Run:
 ```bash
-cd F:\Projekte\Haku
+cd <repo-root>
 git init
 ```
 
