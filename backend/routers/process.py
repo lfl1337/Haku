@@ -1,9 +1,16 @@
-from fastapi import APIRouter, UploadFile, File, Form
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import StreamingResponse
 from services.background_remover import remove_background
 from services.image_processor import resize_stretch
 from services.dds_converter import convert_to_dds
 from models.schemas import BatchRequest, FromUrlRequest
+from security import (
+    PathValidationError,
+    safe_filename,
+    safe_output_path,
+    validate_dir,
+    validate_image_url,
+)
 from PIL import Image
 import io
 import base64
@@ -15,6 +22,14 @@ router = APIRouter()
 
 @router.post("/single")
 async def process_single(file: UploadFile = File(...), output_dir: str = Form(...)):
+    try:
+        out_dir = validate_dir(output_dir)
+        stem = safe_filename(os.path.splitext(os.path.basename(file.filename or ""))[0])
+        temp_png = safe_output_path(output_dir, stem, ".png")
+        out_dds = safe_output_path(output_dir, stem, ".dds")
+    except PathValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
     img_bytes = await file.read()
     original = Image.open(io.BytesIO(img_bytes)).convert("RGBA")
 
@@ -32,27 +47,29 @@ async def process_single(file: UploadFile = File(...), output_dir: str = Form(..
     padded.save(buf2, "PNG")
     processed_b64 = base64.b64encode(buf2.getvalue()).decode()
 
-    # Temp PNG → texconv → DDS
-    stem = os.path.splitext(file.filename)[0]
-    temp_png = os.path.join(output_dir, f"{stem}.png")
+    # Temp PNG → texconv → DDS (paths validated above)
     padded.save(temp_png, "PNG")
-    convert_to_dds(temp_png, output_dir)
+    convert_to_dds(str(temp_png), str(out_dir))
     os.remove(temp_png)
 
     return {
         "original_preview": original_b64,
         "processed_preview": processed_b64,
-        "output_path": os.path.join(output_dir, f"{stem}.dds"),
+        "output_path": str(out_dds),
         "success": True,
     }
 
 
 @router.post("/batch")
 async def process_batch(body: BatchRequest):
-    input_dir = body.input_dir
-    output_dir = body.output_dir
+    try:
+        in_dir = validate_dir(body.input_dir)
+        out_dir = validate_dir(body.output_dir)
+    except PathValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
     supported = (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tga")
-    files = [f for f in os.listdir(input_dir) if f.lower().endswith(supported)]
+    files = [f for f in os.listdir(in_dir) if f.lower().endswith(supported)]
 
     async def stream():
         for i, fname in enumerate(files):
@@ -63,17 +80,20 @@ async def process_batch(body: BatchRequest):
                 "total": len(files),
             }) + "\n"
 
-            path = os.path.join(input_dir, fname)
             try:
-                with open(path, "rb") as f:
+                # os.listdir yields bare names, but route them through the
+                # same validation so the read/write paths stay contained.
+                src = safe_output_path(str(in_dir), fname)
+                stem = safe_filename(os.path.splitext(fname)[0])
+                temp_png = safe_output_path(str(out_dir), stem, ".png")
+
+                with open(src, "rb") as f:
                     img_bytes = f.read()
                 no_bg = remove_background(img_bytes)
                 padded = resize_stretch(no_bg)
 
-                stem = os.path.splitext(fname)[0]
-                temp_png = os.path.join(output_dir, f"{stem}.png")
                 padded.save(temp_png, "PNG")
-                convert_to_dds(temp_png, output_dir)
+                convert_to_dds(str(temp_png), str(out_dir))
                 os.remove(temp_png)
 
                 buf = io.BytesIO()
@@ -104,9 +124,25 @@ async def process_batch(body: BatchRequest):
 async def process_from_url(body: FromUrlRequest):
     import httpx
 
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(body.image_url)
-        img_bytes = resp.content
+    try:
+        url = validate_image_url(body.image_url)
+        out_dir = validate_dir(body.output_dir)
+        temp_png = safe_output_path(body.output_dir, body.filename, ".png")
+        out_dds = safe_output_path(body.output_dir, body.filename, ".dds")
+    except PathValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    # follow_redirects stays False so a 3xx cannot bounce us past the SSRF
+    # check to an internal host; a timeout caps the request.
+    try:
+        async with httpx.AsyncClient(
+            follow_redirects=False, timeout=httpx.Timeout(15.0)
+        ) as client:
+            resp = await client.get(url)
+            resp.raise_for_status()
+            img_bytes = resp.content
+    except httpx.HTTPError as exc:
+        raise HTTPException(status_code=502, detail=f"failed to fetch image: {exc}")
 
     original = Image.open(io.BytesIO(img_bytes)).convert("RGBA")
     buf = io.BytesIO()
@@ -120,14 +156,13 @@ async def process_from_url(body: FromUrlRequest):
     padded.save(buf2, "PNG")
     processed_b64 = base64.b64encode(buf2.getvalue()).decode()
 
-    temp_png = os.path.join(body.output_dir, f"{body.filename}.png")
     padded.save(temp_png, "PNG")
-    convert_to_dds(temp_png, body.output_dir)
+    convert_to_dds(str(temp_png), str(out_dir))
     os.remove(temp_png)
 
     return {
         "original_preview": original_b64,
         "processed_preview": processed_b64,
-        "output_path": os.path.join(body.output_dir, f"{body.filename}.dds"),
+        "output_path": str(out_dds),
         "success": True,
     }
